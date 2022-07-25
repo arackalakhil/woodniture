@@ -11,10 +11,11 @@ class categories(models.Model):
         return self.category_name
 
 class products(models.Model):
-    name = models.CharField(max_length=300)
-    des = models.TextField()
-    img = models.CharField(max_length=3000)
-    price = models.IntegerField()
+    name = models.CharField(max_length=300,null=True)
+    des = models.TextField(null=True)
+    # img = models.ImageField(null=True,upload_to = "product_images")
+    img = models.CharField(max_length=3000,null=True)
+    price = models.IntegerField(null=True)
     stock = models.IntegerField(null=True)
     cats = models.ForeignKey(categories,on_delete=models.CASCADE,null=True,blank=True)
     

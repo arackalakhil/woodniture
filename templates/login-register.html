@@ -302,7 +302,7 @@
                                 <h2>Login</h2>
                             </div>
                             <div class="login-form">
-                                <form action="loginuser" method="POST">
+                                <form action="{% url 'login-register' %}" method="POST">
                                     {% csrf_token %}
                                     <!-- <div class="form-fild">
                                         <p><label>Username <span class="required">*</span></label></p>
@@ -326,8 +326,10 @@
                                         <label>
                                             <input class="checkbox" name="rememberme" value="" type="checkbox">
                                             <span>Remember me</span>
+                                            <a href="user-register">tap to create an account</a>
                                         </label>
                                     </div>
+                                    
                                     <div class="lost-password">
                                         <a href="number_login">login with phone number</a>
                                     </div>
@@ -337,7 +339,7 @@
                     </div>
                     <!--Login Form End-->
                     <!--Register Form Start-->
-                    <div class="col-md-6 col-sm-6">
+                    <!-- <div class="col-md-6 col-sm-6">
                         <div class="customer-login-register register-pt-0">
                             <div class="form-register-title">
                                 <h2>Register</h2>
@@ -384,7 +386,7 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!--Register Form End-->
                 </div>
             </div>
