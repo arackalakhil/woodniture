@@ -1,4 +1,5 @@
 {% extends 'user_header_footer.html' %}
+{% load mathfilters %}
 
 {% load static %}
 
@@ -14,9 +15,9 @@
                     <div class="col">
 
                         <div class="page-banner text-left">
-                            <h2>order summery</h2>
+                            <h2>order summary</h2>
                             <ul class="page-breadcrumb">
-                                <li><a href="index.html">Home</a></li>
+                                <li><a href="{% url 'index_page' %}">Home</a></li>
                                 <li>order</li>
                             </ul>
                         </div>
@@ -55,12 +56,65 @@
                                     <tr>
                                         <td class="pro-thumbnail"><a href="#"><img src="{{x.product.img}}" alt="Product"></a></td>
                                         <td class="pro-title"><a href="#">{{x.product.name}}</a></td>
-                                        <td class="pro-price"><span>₹{{x.product.price}}</span></td>
-                                        <td class="pro-price"><span>₹{{x.quantity}}</span></td>
-                                        </td>
-                                        <td class="pro-subtotal"><span>₹{{x.sub_total}}</span></td>
-                                        
+                                        {% if x.product.product_offer.discount and x.product.cats.cats_offers.discount %}
+                                        {% if x.product.product_offer.discount > x.product.cats.cats_offers.discount %}
                                             
+                                            <td><p class="pro-price"><strong
+                                                 >
+                                                 ₹{{x.product.product_offer.discount|mul:x.product.price|div:100|sub:x.product.price|abs}}
+                                            </strong> </p></td>
+                                        {% else %}
+                                    
+                                            <td><p class="pro-price"><strong>
+                                            ₹{{x.product.cats.cats_offers.discount|mul:x.product.price|div:100|sub:x.product.price|abs}}
+                                            </strong> </p></td>
+                                        {%endif%}
+                                {% elif x.product.product_offer.discount %}
+                                   <td> <p class="pro-price"><strong
+                                        >
+                                    ₹{{x.product.product_offer.discount|mul:x.product.price|div:100|sub:x.product.price|abs}}
+                                    </strong> </p></td>
+            
+                                {% elif x.product.cats.cats_offers.discount %}
+                                <td> <p class="pro-price"><strong >
+                                    ₹{{x.product.cats.cats_offers.discount|mul:x.product.price|div:100|sub:x.product.price|abs}}
+                                     </strong> </p></td>
+            
+                                {% else %}
+                                <td> <p class="pro-price"><strong
+                                    >
+                                    {{x.product.price}}</strong> </p></td>
+                                {% endif %}
+
+                                <td class="pro-price"><span>{{x.quantity}}</span></td>
+                                {% if x.product.product_offer.discount and x.product.cats.cats_offers.discount %}
+                                {% if x.product.product_offer.discount > x.product.cats.cats_offers.discount %}
+        
+                                                 <td><p class="pro-price"><strong>
+                                                                ₹{{x.product.product_offer.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}
+                                                    </strong> </p></td>
+                                {% else %}
+        
+                                        <td><p class="pro-price"><strong>
+                                        ₹{{x.product.cats.cats_offers.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}
+                                        </strong> </p></td>
+                                {%endif%}
+                            {% elif x.product.product_offer.discount %}
+                                            <td> <p class="pro-price"><strong>₹{{x.product.product_offer.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}</strong> </p></td>
+        
+                            {% elif x.product.cats.cats_offers.discount %}
+                                        <td> <p class="pro-price"><strong>₹{{x.product.cats.cats_offers.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}</strong> </p></td>
+        
+                            {% else %}
+                            <td> <p class="pro-price"><strong>₹{{x.product.price|mul:x.quantity|abs}}</strong> </p></td>
+                            {% endif %}
+        
+        
+
+
+
+                                   
+                                        
                                     </tr>
                                     {% endfor %}
                                 
@@ -137,9 +191,15 @@
                                 <div class="cart-summary">
                                     <div class="cart-summary-wrap">
                                         <h4> Summary</h4>
-                                        <p>Sub Total <span>₹00.00</span></p>
-                                        <p>Shipping Cost <span>₹00.00</span></p>
+                                        <!-- <p>Sub Total <span>₹00.00</span></p> -->
+                                        <p>Shipping Cost <span> Free Shipping</span></p>
+                                        <p>total <span>₹{{total}}</span></p>
+                                        {% if reduction > 0 %}
+                                        <h2>Grand Total <span>₹{{new_total}}</span></h2>
+                                        <p style="color:blue;">Coupon applied</p>
+                                        {% else %}
                                         <h2>Grand Total <span>₹{{total}}</span></h2>
+                                        {%endif%}
                                         <div class="cart-summary-button">
                                           <a href="{% url 'cod' %}" class="w-100"> <button class="btn w-100">COD</button></a>
                                           <a href="{% url 'paypal' %}" class="w-100"><button class="btn w-100">Paypal </button></a>
@@ -152,9 +212,6 @@
 
                                       </div>
                                     </div>
-                                    
-                                    
-                                
                             </div>
                         </div>
 
@@ -166,7 +223,7 @@
         <!--Cart section end-->
         <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          -->
-         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
          <script>
           var options = {
               "key": "rzp_test_VnQZ2Ga4fHBfxq", // Enter the Key ID generated from the Dashboard

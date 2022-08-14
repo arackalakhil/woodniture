@@ -53,7 +53,7 @@ class customuser(AbstractBaseUser):
     last_name = models.CharField(max_length=250)
     email = models.EmailField(max_length=250, unique=True)
     phone_number = models.CharField(max_length=250, unique=True)
-
+    
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
@@ -97,5 +97,17 @@ class userprofile(models.Model):
     state = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
      
+    def __str__(self):
+        return self.user.username
+
+
+
+    
+class wallet(models.Model):
+    user = models.ForeignKey(customuser,on_delete=models.CASCADE)
+    balance = models.FloatField( max_length=15, null = True, default= 0 )
+    is_applied = models.BooleanField(default=True)
+
+
     def __str__(self):
         return self.user.username

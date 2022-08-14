@@ -36,7 +36,7 @@
               ">
                         <div class="card-body p-5 shadow-5 text-center">
                             <h2 class="fw-bold mb-5">Sign up now</h2>
-                            <form action="" method="POST">
+                            <form action="{% url 'otp_login' phone_number %}" method="POST">
                                 {% csrf_token %}
                                 <!-- 2 column grid layout with text inputs for the first and last names -->
                                 <div class="row">
@@ -45,6 +45,7 @@
                                             <input type="text" id="form3Example1" name ="otp" class="form-control" />
                                             <label class="form-label" for="form3Example1">OTP </label>
                                         </div>
+                                        
                                     </div>
                                     <!-- Submit button -->
                                     <button type="submit" class="btn btn-primary btn-block mb-4">
@@ -80,10 +81,11 @@
                     </div>
                 </div>
 
+               
+                </div>
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg"
-                        class="w-100 rounded-4 shadow-4" alt="" />
-                </div>
+                        class="w-100 rounded-4 shadow-4" alt="phone image" />
             </div>
         </div>
         <!-- Jumbotron -->

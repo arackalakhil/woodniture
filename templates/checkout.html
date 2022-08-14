@@ -1,10 +1,11 @@
 {% extends 'user_header_footer.html' %}
+{% load mathfilters %}
 
 {% load static %}
 
 {% block headerandfooter %}
         <!-- Page Banner Section Start -->
-        <div class="page-banner-section section bg-image" data-bg="assets/images/bg/breadcrumb.png">
+        <div class="page-banner-section section bg-image" data-bg="{% static 'assets/images/bg/breadcrumb.jpg' %}">
             <div class="container">
                 <div class="row">
                     <div class="col">
@@ -12,7 +13,7 @@
                         <div class="page-banner text-left">
                             <h2>Checkout</h2>
                             <ul class="page-breadcrumb">
-                                <li>Home</a></li>
+                               <a href="{% url 'index_page' %}"><li>Home/</li></a> 
                                 <li>Checkout</li>
                             </ul>
                         </div>
@@ -45,7 +46,7 @@
                                             <div class="col-md-6 col-12 mb-20">
                                                 <div class="check-box">
                                                     <!-- <input type="checkbox" id="create_account"> -->
-                                                    <input type="radio" name="address_id" value="{{x.id}}">
+                                                    <input type="radio" name="address_id" value="{{x.id}}"  checked>
                                            
                                                 <label>{{x.name}}</label>
                                                 <label>{{x.email}}</label>
@@ -57,12 +58,17 @@
                                             </div>
                                         </div>
                                             {% endfor %}
+                                            {% if messages %}
+                                                {% for message in messages %}
+                                                    {{message}}
+                                                {% endfor %}
+                                            {% endif %}
                                             <div class="col-12 mb-20">
                                                 <div class="check-box">
                                                     <input type="checkbox" id="create_account">
-                                               <a href="{% url 'add_address' %}">deliver to different address</button></a> 
                                                <!-- <label for="create_account">tap to add to different Address</label> -->
                                                 </div>
+
                                                 <div class="check-box">
                                                     <input type="checkbox" id="shiping_address" data-shipping>
                                                     <!-- <label for="shiping_address">add to Different Address</label> -->
@@ -72,6 +78,7 @@
                                         </div>
                                     
                                     </div>
+                                    <a href="{% url 'add_address' %}" class="btn">  Add address </a> 
 
                                     <!-- Shipping Address -->
                                     <!-- <div id="shipping-form">
@@ -157,14 +164,39 @@
                                                 <h4>Product <span>Total</span></h4>
                                                 {% for x in carts_item %}
                                                 <ul>
-                                                    <li>{{x.product.name}} <span>₹{{x.product.price}}</span></li>
+                                                     {% if x.product.product_offer.discount and x.product.cats.cats_offers.discount %}
+                                                                {% if x.product.product_offer.discount > x.product.cats.cats_offers.discount %}
+                                                                <li>{{x.product.name}} <span>  ₹{{x.product.product_offer.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}</span></li>
+                                                                {% else %}
+                                                                <li>{{x.product.name}} <span> ₹{{x.product.cats.cats_offers.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}</span></li>
+                                                                {%endif%}
+                                                     {% elif x.product.product_offer.discount %}      
+                                                             <li>{{x.product.name}} <span> ₹{{x.product.product_offer.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}</span></li>
+                                                     {% elif x.product.cats.cats_offers.discount %}
+                                                     <li>{{x.product.name}} <span> ₹{{x.product.cats.cats_offers.discount|mul:x.product.price|div:100|sub:x.product.price|mul:x.quantity|abs}}</span></li>
+                                                     {% else %}
+                                                     <li>{{x.product.name}} <span>₹{{x.product.price|mul:x.quantity|abs}}</span></li>
+                                                     {% endif %}
+
+
+
+
+
+                                                  
                                                 </ul>
                                                 {% endfor %}
-                                                <p><strong>Sub Total </strong> <span>₹{{x.sub_total}}</span></p>
-                                                <p>Shipping Fee <span>₹00.00</span></p>
+                                                <!-- <p><strong>Sub Total </strong> <span>{{x.sub_total}}g</span></p> -->
+                                                <p>Shipping Fee <span>Free shipping</span></p>
+                                                <p>Total <span>₹{{total}}</span></p>
+                                                <!-- <h4>Grand Total <span>₹{{total}}</span></h4> -->
+                                                {% if reduction > 0 %}
+                                                <p>Discount <span>{{reduction}}%</span></p>
 
-                                                <h4>Grand Total <span>₹{{total}}</span></h4>
-
+                                                <h4 style="color: white;">Grand Total <span>₹{{new_total}}</span></h4>
+                                                <p style="color:blue;">Coupon applied</p>
+                                                {% else %}
+                                                <h4 style="color: white;">Grand Total <span>₹{{total}}</span></h4>
+                                                {%endif%}
                                             </div>
                                             <button class="place-order btn btn-lg btn-round">Place order</button>
                                         </div>

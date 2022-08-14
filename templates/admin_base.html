@@ -39,9 +39,9 @@
     <!-- Logo --> 
     <a href="{% url 'admin_index' %}" class="logo blue-bg"> 
     <!-- mini logo for sidebar mini 50x50 pixels --> 
-    <span class="logo-mini"><img src="{% static 'dist/img/logo-n.png' %}" alt=""></span> 
+    <!-- <span class="logo-mini"><img src="{% static 'dist/img/logos.png' %}" alt=""></span>  -->
     <!-- logo for regular state and mobile devices --> 
-    <span class="logo-lg"><img src="{% static 'dist/img/logo.png' %}" alt=""></span> </a> 
+    <span class="logo-lg"><img style="height: 50px;" src="{% static 'dist/img/logos.png' %}" alt=""></span> </a> 
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar blue-bg navbar-static-top"> 
       <!-- Sidebar toggle button-->
@@ -49,18 +49,20 @@
         <li><a class="sidebar-toggle" data-toggle="push-menu" href=""></a> </li>
       </ul>
       <div class="pull-left search-box">
-        <form action="#" method="get" class="search-form">
+        <form action="{% url 'user_search' %}" method="POST" class="search-form">
+          {% csrf_token %}
           <div class="input-group">
             <input name="search" class="form-control" placeholder="Search..." type="text">
             <span class="input-group-btn">
             <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i> </button>
             </span></div>
         </form>
+    
         <!-- search form --> </div>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <!-- Messages: style can be found in dropdown.less-->
-          <li class="dropdown messages-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-envelope-o"></i>
+          <!-- <li class="dropdown messages-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-envelope-o"></i>
             <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
             </a>
             <ul class="dropdown-menu">
@@ -95,9 +97,9 @@
               </li>
               <li class="footer"><a href="#">View All Messages</a></li>
             </ul>
-          </li>
+          </li> -->
           <!-- Notifications: style can be found in dropdown.less -->
-          <li class="dropdown messages-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-bell-o"></i>
+          <!-- <li class="dropdown messages-menu"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-bell-o"></i>
             <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
             </a>
             <ul class="dropdown-menu">
@@ -132,21 +134,22 @@
               </li>
               <li class="footer"><a href="#">Check all Notifications</a></li>
             </ul>
-          </li>
+          </li> -->
           <!-- User Account: style can be found in dropdown.less -->
-          <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="{% static 'dist/img/img1.jpg' %}" class="user-image" alt="User Image"> <span class="hidden-xs">Alexander Pierce</span> </a>
+                
+          <li class="dropdown user user-menu p-ph-res"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="{% static 'dist/img/img1.jpg' %}" class="user-image" alt="User Image"> {% if user.is_authenticated %} <span class="hidden-xs">admin:&nbsp;{{user.username}}</span>{% endif %} </a>
             <ul class="dropdown-menu">
               <li class="user-header">
-                <div class="pull-left user-img"><img src="{% static 'dist/img/img1.jpg' %}" class="img-responsive" alt="User"></div>
-                <p class="text-left">Florence Douglas <small>florence@gmail.com</small> </p>
-                <div class="view-link text-left"><a href="#">View Profile</a> </div>
+                <!-- <div class="pull-left user-img"><img src="{% static 'dist/img/img1.jpg' %}" class="img-responsive" alt="User"></div> -->
+                <!-- <p class="text-left">Florence Douglas <small>florence@gmail.com</small> </p> -->
+                <!-- <div class="view-link text-left"><a href="#">View Profile</a> </div> -->
               </li>
-              <li><a href="#"><i class="icon-profile-male"></i> My Profile</a></li>
-              <li><a href="#"><i class="icon-wallet"></i> My Balance</a></li>
-              <li><a href="#"><i class="icon-envelope"></i> Inbox</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#"><i class="icon-gears"></i> Account Setting</a></li>
-              <li role="separator" class="divider"></li>
+              <!-- <li><a href="#"><i class="icon-profile-male"></i> My Profile</a></li> -->
+              <!-- <li><a href="#"><i class="icon-wallet"></i> My Balance</a></li> -->
+              <!-- <li><a href="#"><i class="icon-envelope"></i> Inbox</a></li> -->
+              <!-- <li role="separator" class="divider"></li> -->
+              <!-- <li><a href="#"><i class="icon-gears"></i> Account Setting</a></li> -->
+              <!-- <li role="separator" class="divider"></li> -->
               <li><a href="{% url 'admin_logout' %}"><i class="fa fa-power-off"></i> Logout</a></li>
             </ul>
           </li>
@@ -162,8 +165,11 @@
       <div class="user-panel">
         <div class="image text-center"><img src="{% static 'dist/img/img1.jpg' %}" class="img-circle" alt="User Image"> </div>
         <div class="info">
-          <p>Alexander Pierce</p>
-          <a href="{% url 'admin_logout' %}"><i class="fa fa-cog"></i></a> <a href="#"><i class="fa fa-envelope-o"></i></a> <a href="#"><i class="fa fa-power-off"></i></a> </div>
+          {% if user.is_authenticated %}
+          <p>{{user.username}}</p>
+          {% endif %}
+          <!-- <a href=""><i class="fa fa-cog"></i></a> <a href="#"><i class="fa fa-envelope-o"></i></a>  -->
+          <a href="{% url 'admin_logout' %}" onclick="return confirm('Do you want to logout {{user.username}}')"><i class="fa fa-power-off"></i></a> </div>
       </div>
       
       <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -214,9 +220,10 @@
           </ul>
         </li> -->
         <li class="header">Order List</li>
-        <li class="treeview"> <a href="#"> <i class="fa fa-edit"></i> <span>Forms</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+        <li class="treeview"> <a href="#"> <i class="fa fa-edit"></i> <span>Order List</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
           <ul class="treeview-menu">
             <li><a href="{% url 'order_management' %}">Order List</a></li>
+
 
             <!-- <li><a href="form-elements.html">Form Elements</a></li>
             <li><a href="form-validation.html">Form Validation</a></li>
@@ -254,6 +261,52 @@
             <li><a href="table-jsgrid.html">Js Grid Table</a></li> -->
           </ul>
         </li>
+        <li class="treeview"> <a href="#"> <i class="fa fa-table"></i> <span>OFFER DETAILS</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+          <ul class="treeview-menu">
+            <li><a href="{% url 'product_offer_view' %}"> ProductOffer </a></li>
+            <li><a href="{% url 'category_offer_view' %}"> CategoryOffer </a></li>
+
+
+            <!-- <li><a href="table-layout.html">Table Layouts</a></li>
+            <li><a href="table-data-table.html">Data Tables</a></li>
+            <li><a href="table-jsgrid.html">Js Grid Table</a></li> -->
+          </ul>
+        </li>
+        <li class="treeview"> <a href="#"> <i class="fa fa-table"></i> <span>Coupon DETAILS</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+          <ul class="treeview-menu">
+            <li><a href="{% url 'view_coupon' %}"> Coupon </a></li>
+
+            <!-- <li><a href="table-layout.html">Table Layouts</a></li>
+            <li><a href="table-data-table.html">Data Tables</a></li>
+            <li><a href="table-jsgrid.html">Js Grid Table</a></li> -->
+          </ul>
+        </li>
+        <li class="treeview"> <a href="#"> <i class="fa fa-table"></i> <span>Sales Report</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+          <ul class="treeview-menu">
+            <li><a href="{% url 'salesreport' %}"> Sales </a></li>
+
+            <!-- <li><a href="table-layout.html">Table Layouts</a></li>
+            <li><a href="table-data-table.html">Data Tables</a></li>
+            <li><a href="table-jsgrid.html">Js Grid Table</a></li> -->
+          </ul>
+        </li>
+        <li class="treeview"> <a href="#"> <i class="fa fa-table"></i> <span>Banner Manangement </span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+          <ul class="treeview-menu">
+            <li><a href="{% url 'view_banner' %}"> Banner </a></li>
+          
+            <!-- <li><a href="table-layout.html">Table Layouts</a></li>
+            <li><a href="table-data-table.html">Data Tables</a></li>
+            <li><a href="table-jsgrid.html">Js Grid Table</a></li> -->
+          </ul>
+        </li>
+        <!-- <li class="treeview"> <a href="#"> <i class="fa fa-table"></i> <span>Order Data</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
+          <ul class="treeview-menu">
+            <li><a href="">Orderdata </a></li> -->
+            <!-- <li><a href="table-layout.html">Table Layouts</a></li>
+            <li><a href="table-data-table.html">Data Tables</a></li>
+            <li><a href="table-jsgrid.html">Js Grid Table</a></li> -->
+          <!-- </ul>
+        </li> -->
         <!-- <li class="treeview"> <a href="#"> <i class="fa fa-th"></i> <span>listproducts</span> <span class="pull-right-container"> <i class="fa fa-angle-left pull-right"></i> </span> </a>
           <ul class="treeview-menu">
             <li><a href="widget-data.html">Data Widgets</a></li>
@@ -333,9 +386,10 @@
   {% block headerandfooter %}
 
   {% endblock %}
+
   <!-- Content Wrapper. Contains page content -->
   <!-- <div class="content-wrapper"> 
-    <!-- Content Header (Page header) -->
+    Content Header (Page header) --> 
     <!-- <div class="content-header sty-one">
       <h1>Dashboard</h1>
       <ol class="breadcrumb">
@@ -763,28 +817,47 @@
      
   <!-- </div> -->
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  <!-- <footer class="main-footer">
     <div class="pull-right hidden-xs">Version 1.2</div>
     Copyright © 2017 Yourdomian. All rights reserved.</footer>
 </div>
-<!-- ./wrapper --> 
+</wrapper --> 
+   
 
-<!-- jQuery 3 --> 
-<script src="{% static 'dist/js/jquery.min.js' %}"></script> 
+    <!-- ./wrapper -->
 
-<!-- v4.0.0-alpha.6 --> 
-<script src="{% static 'dist/bootstrap/js/bootstrap.min.js' %}"></script> 
+    <!-- jQuery 3 -->
+    <script src="{% static 'dist/js/jquery.min.js' %}"></script>
 
-<!-- template --> 
-<script src="{% static 'dist/js/niche.js' %}"></script> 
+    <!-- v4.0.0-alpha.6 -->
+    <script src="{% static 'dist/bootstrap/js/bootstrap.min.js' %}"></script>
 
-<!-- Chartjs JavaScript --> 
-<script src="{% static 'dist/plugins/chartjs/chart.min.js' %}"></script>
-<script src="{% static 'dist/plugins/chartjs/chart-int.js' %}"></script>
+    <!-- template -->
+    <script src="{% static 'dist/js/niche.js' %}"></script>
 
-<!-- Chartist JavaScript --> 
-<script src="{% static 'dist/plugins/chartist-js/chartist.min.js' %}"></script> 
-<script src="{% static 'dist/plugins/chartist-js/chartist-plugin-tooltip.js' %}"></script> 
-<script src="{% static 'dist/plugins/functions/chartist-init.js' %}"></script>
+    <!-- DataTable -->
+    <script src="{% static 'dist/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'dist/plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <script>
+      $(function ( ) {
+        $('#example1').DataTable()
+        $('#example2').DataTable({
+          'paging': true,
+          'lengthChange': false,
+          'searching': false,
+          'ordering': true,
+          'info': true,
+          'autoWidth': false
+        })
+      })
+    </script>
+
+    <script src="{% static 'dist/plugins/table-expo/filesaver.min.js' %}"></script>
+    <script src="{% static 'dist/plugins/table-expo/xls.core.min.js' %}"></script>
+    <script src="{% static 'dist/plugins/table-expo/tableexport.js' %}"></script>
+    <script>
+      $("table").tableExport({ formats: ["xlsx", "xls", "csv", "txt"], });
+    </script>
 </body>
+
 </html>

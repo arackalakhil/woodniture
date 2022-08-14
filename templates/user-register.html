@@ -32,7 +32,7 @@
                         <div class="col-xl-3 col-lg-2 col-md-4 col-12">
                             <!--Logo Area Start-->
                             <div class="logo-area">
-                                <a href="index.html"><img src="{% static './assets/images/logo.png' %}" alt=""></a>
+                                <a href="{% url 'index_page' %}"><img src="{% static './assets/images/logo.png' %}" alt="" style="width: 127px;"></a>
                             </div>
                             <!--Logo Area End-->
                         </div>
@@ -60,7 +60,7 @@
                                 <div class="row align-items-center">
                                     <div class="col-6 col-md-6">
                                         <div class="header-logo">
-                                            <a href="index.html">
+                                            <a href="{% url 'index_page' %}">
                                                 <img src="{% static './assets/images/logo.png' %}" class="img-fluid" alt="">
                                             </a>
                                         </div>
@@ -118,7 +118,7 @@
                         <ul>
                             <li class="menu-item-has-children"><a href="#">Home</a>
                                 <ul class="submenu2">
-                                    <li><a href="index.html">Home 01</a></li>
+                                    <li><a href="{% url 'index_page' %}">Home 01</a></li>
                                     <li><a href="index-2.html">Home 02</a></li>
                                 </ul>
                             </li>
@@ -281,7 +281,7 @@
                         <div class="page-banner text-left">
                             <h2>Login Register</h2>
                             <ul class="page-breadcrumb">
-                                <li><a href="index.html">Home</a></li>
+                                <li><a href="{% url 'index_page' %}">Home</a></li>
                                 <li>Login Register</li>
                             </ul>
                         </div>

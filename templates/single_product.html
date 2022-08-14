@@ -1,20 +1,21 @@
 {% extends 'user_header_footer.html' %}
 
 {% load static %}
+{% load mathfilters %}
 
 {% block headerandfooter %}
 
         <!-- Page Banner Section Start -->
-        <div class="page-banner-section section bg-image" data-bg="assets/images/bg/breadcrumb.png">
+        <div class="page-banner-section section bg-image" data-bg="{% static 'assets/images/bg/breadcrumb.jpg' %}">
             <div class="container">
                 <div class="row">
                     <div class="col">
 
                         <div class="page-banner text-left">
-                            <h2>Single Product</h2>
+                            <h2>Product</h2>
                             <ul class="page-breadcrumb">
-                                <li><a href="index.html">Home</a></li>
-                                <li>Single Product</li>
+                                <li><a href="{% url 'index_page' %}">Home</a></li>
+                                <li>Product</li>
                             </ul>
                         </div>
 
@@ -36,33 +37,33 @@
                                         <div class="product-details-images">
                                             <div class="lg-image">
                                                 
-                                                <img src="{{values.img}}" alt="">
-                                                <a href="./assets/images/product/large-product/l-product-1.jpg" class="popup-img venobox" data-gall="myGallery"><i class="fa fa-expand"></i></a>
+                                                <img src="{{values.img}}" alt="product-details-images">
+                                                <a href="{{values.img}}"class="popup-img venobox" data-gall="myGallery"><i class="fa fa-expand"></i></a>
                                             </div>
-                                            <div class="lg-image">
+                                            <!-- <div class="lg-image">
                                                 <img src="./assets/images/product/large-product/l-product-2.jpg" alt="">
                                                 <a href="./assets/images/product/large-product/l-product-2.jpg" class="popup-img venobox" data-gall="myGallery"><i class="fa fa-expand"></i></a>
-                                            </div>
-                                            <div class="lg-image">
+                                            </div> -->
+                                            <!-- <div class="lg-image">
                                                 <img src="./assets/images/product/large-product/l-product-3.jpg" alt="">
                                                 <a href="./assets/images/product/large-product/l-product-3.jpg" class="popup-img venobox" data-gall="myGallery"><i class="fa fa-expand"></i></a>
-                                            </div>
-                                            <div class="lg-image">
+                                            </div> -->
+                                            <!-- <div class="lg-image">
                                                 <img src="./assets/images/product/large-product/l-product-4.jpg" alt="">
                                                 <a href="./assets/images/product/large-product/l-product-4.jpg" class="popup-img venobox" data-gall="myGallery"><i class="fa fa-expand"></i></a>
-                                            </div>
-                                            <div class="lg-image">
+                                            </div> -->
+                                            <!-- <div class="lg-image">
                                                 <img src="./assets/images/product/large-product/l-product-5.jpg" alt="">
                                                 <a href="./assets/images/product/large-product/l-product-5.jpg" class="popup-img venobox" data-gall="myGallery"><i class="fa fa-expand"></i></a>
-                                            </div>
+                                            </div> -->
                                         </div>
-                                        <div class="product-details-thumbs">
+                                        <!-- <div class="product-details-thumbs">
                                             <div class="sm-image"><img src="./assets/images/product/small-product/s-product-1.jpg" alt="product image thumb"></div>
                                             <div class="sm-image"><img src="./assets/images/product/small-product/s-product-2.jpg" alt="product image thumb"></div>
                                             <div class="sm-image"><img src="./assets/images/product/small-product/s-product-3.jpg" alt="product image thumb"></div>
                                             <div class="sm-image"><img src="./assets/images/product/small-product/s-product-4.jpg" alt="product image thumb"></div>
                                             <div class="sm-image"><img src="./assets/images/product/small-product/s-product-5.jpg" alt="product image thumb"></div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <!--Product Details Left -->
                                 </div>
@@ -80,12 +81,57 @@
                                             <i class="fa fa-star active"></i>
                                             <i class="fa fa-star active"></i>
                                             <i class="fa fa-star active"></i>
-                                            <i class="fa fa-star active"></i>
+                                             <i class="fa fa-star active"></i>
                                             <i class="fa fa-star-o"></i>
                                             <a class="review-link" href="#">(1 customer review)</a>
                                         </div>
                                         <div class="single-product-price">
+                                            
+                                                 <!-- <del> <span class="price new-price">₹{{values.price}}</span></del> 
+                                                    <span class="price new-price">₹{{values.product_new_price}}</span> -->
+                                                
+                                           
+                                            <!-- {% if values.product_offer %}
+                                            <del> <span class="price new-price">₹{{values.price}}</span></del>
+                                            
+                                                    <p class="product-price"><span
+                                                        class="discounted-price">₹{{values.product_offer.discount|mul:values.price|div:100|sub:values.price|abs}} </span> </p>
+                                            {% else %}
                                             <span class="price new-price">₹{{values.price}}</span>
+                                            {% endif %} -->
+                                            
+                                            {% if values.product_offer.discount and values.cats.cats_offers.discount %}
+                                                        {% if values.product_offer.discount > values.cats.cats_offers.discount %}
+                                                            <del>price:₹{{values.price}}</span> </p></del>
+                                                            <p class="product-price"><span class="discounted-price"> offerprice:₹{{values.product_offer.discount|mul:values.price|div:100|sub:values.price|abs}} </span> </p>
+                                                         {% else %}
+                                                                <del>price:₹{{values.price}}</span> </p></del>
+                                                                <p class="product-price"><span
+                                                                class="discounted-price">
+                                                                offerprice:₹{{values.cats.cats_offers.discount|mul:values.price|div:100|sub:values.price|abs}}
+                                                                </span> </p>
+                                                        {%endif%}
+                                            {% elif values.product_offer.discount %}
+                                                        <del>price:₹{{values.price}}</span> </p></del>
+                                                        <p class="product-price"><span
+                                                                    class="discounted-price">
+                                                                offerprice:₹{{values.product_offer.discount|mul:values.price|div:100|sub:values.price|abs}}
+                                                          </span> </p>
+
+                                {% elif values.cats.cats_offers.discount %}
+                                            <del>price:₹{{values.price}}</span> </p></del>
+                                            <p class="product-price"><span
+                                            class="discounted-price">
+                                            offerprice:₹{{values.cats.cats_offers.discount|mul:values.price|div:100|sub:values.price|abs}}
+                                            </span> </p>
+
+                                {% else %}
+                                <p class="product-price"><span
+                                        class="discounted-price">price:
+                                        {{values.price}}</span> </p>
+                                {% endif %}
+                             
+
                                             <!-- <span class="regular-price">$77.00</span> -->
                                         </div>
                                         <div class="product-description">
@@ -106,10 +152,10 @@
                                             </form>
                                             <a href="{% url 'add_cart' values.id %}" > <button class="btn mb-2"><i class="fa fa-shopping-bag"></i>add to cart</button></a>
                                         </div>
-                                        <div class="wishlist-compare-btn">
-                                            <a href="#" class="wishlist-btn">Add to Wishlist</a>
-                                            <!-- <a href="#" class="add-compare">Compare</a> -->
-                                        </div>
+                                        <!-- <div class="wishlist-compare-btn"> -->
+                                            <!-- <a href="#" class="wishlist-btn">Add to Wishlist</a> -->
+                                    <!-- <a href="#" class="add-compare">Compare</a> -->
+                                        <!-- </div> -->
                                         <!-- <div class="product-meta">
                                             <span class="posted-in">
                                                 Categories: 

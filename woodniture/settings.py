@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,8 +44,14 @@ INSTALLED_APPS = [
     "products",
     "carts",
     "order",
+    "mathfilters",
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
-
+SITE_ID = 1
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -68,6 +75,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "carts.context_processor.extras",
             ],
         },
     },
@@ -146,5 +154,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 
-RAZOR_KEY_ID ="rzp_test_VnQZ2Ga4fHBfxq"
-RAZOR_KEY_SECRET = "EevORF05OFBElPJPXy2akWTF"
+
+RAZOR_KEY_ID=config("RAZOR_KEY_ID")
+RAZOR_KEY_SECRET=config("RAZOR_KEY_SECRET")
+
+
+ACCOUNT_SID= config("ACCOUNT_SID")
+AUTH_TOKEN=config("AUTH_TOKEN")
+SERVICES=config("SERVICES")
+AUTHENTICATION_BACKENDS = [
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+    ]

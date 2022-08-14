@@ -1,5 +1,5 @@
 {% extends 'user_header_footer.html' %}
-
+{% load mathfilters %}
 {% load static %}
 
 {% block headerandfooter %}
@@ -18,16 +18,18 @@
 
                                     <a href="#orders" data-toggle="tab"><i class="fa fa-cart-arrow-down"></i> Orders</a>
 
-                                    <a href="#download" data-toggle="tab"><i class="fa fa-cloud-download"></i> Download</a>
+                                    <a href="#download" data-toggle="tab"><i class="fa fa-cloud-download"></i> Order Details</a>
 
-                                    <a href="#payment-method" data-toggle="tab"><i class="fa fa-credit-card"></i> Payment
-                                        Method</a>
 
-                                    <a href="#address-edit" data-toggle="tab"><i class="fa fa-map-marker"></i> address</a>
+                                    <a href="#wallet" data-toggle="tab"><i class="fa fa-credit-card"></i> Wallet</a>
+                                    <a href="#address" data-toggle="tab"><i class="fa fa-map-marker"></i> Address</a>
+                                    <!-- <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Address</a> -->
+                                    <a href="#user-data" data-toggle="tab"><i class="fa fa-user"></i> My Data</a>
+                                    <a href="#password" data-toggle="tab"><i class="fa fa-user"></i> Change Password</a>
 
-                                    <a href="#account-info" data-toggle="tab"><i class="fa fa-user"></i> Account Details</a>
-
-                                    <a href="login-register.html"><i class="fa fa-sign-out"></i> Logout</a>
+                                    
+                                    
+                            
                                 </div>
                             </div>
                             <!-- My Account Tab Menu End -->
@@ -69,12 +71,14 @@
                                                         <tr>
                                                         
                                                             <th>Name</th>
-                                                            <th>quantity</th>
+                                                            <th>orderid</th>
                                     
-                                                            <th>price</th>
-                                                            <th>date</th>
-                                                            <th>Action</th>
-                                                            <th>type</th>
+                                                            <th>total</th>
+                                                            <th>date of order</th>
+                                                            <th>details</th>
+                                                       
+
+                                                            
                                                         </tr>
                                                     </thead>
                                                     
@@ -87,17 +91,46 @@
                                                             <td>{{x.order_id}}</td>
                                                             <td>{{x.total}}</td>
                                                             <td>{{x.date}}</td>
-                                                            <td>{{x.status}}</td>
-                                                           
-
-                                                            {% if x.status == "cancelled" %}
+                                                            <!-- <td>{{x.status}}</td> -->
                                                             
-                                                            <td><a class="btn">cancelled</a></td> 
+                                                           <!-- {% if x.status == "delivered" %}
+                                                            <td><a href="{% url 'product_return' x.id %}"  class="btn">return</a></td> 
+                                                           {% endif %}
+                                                            {% if x.status == "cancelled" %}
+                                                           <td>{{x.status}}</td>
+                                                           {% endif %}
 
-                                                            {% else %}
+                                                            {% if x.status == "returned" %}
+                                                           <td>{{x.status}}</td> 
+                                                           {% endif %}
+                                                           {% if x.status == "order conformed" %}
+                                                            <td><a href="{% url 'order_cancel' x.id %}"  class="btn">tap to cancel</a></td> 
+                                                           {% endif %}
+                                                           {% if x.status == "shipped" %}
+                                                           <td><a href="{% url 'order_cancel' x.id %}"  class="btn">tap to cancel</a></td> 
+                                                           {% endif %}
+                                                           {% if x.status == "out for delivery" %}
+                                                           <td><a href="{% url 'order_cancel' x.id %}"  class="btn">tap to cancel</a></td> 
+
+                                                           {% endif %}
+                                                           {% if x.status != "cancelled" %}
+
+                                                           <td><a href="{% url 'user_order_details' x.id %}"  class="btn">Details</a></td> 
+                                                           {% endif %} -->
+                                                          
+                                                           <td><a href="{% url 'user_order_details' x.id %}"  class="btn">Details</a></td> 
+
+
+
+<!--    
+                                                           {% if x.status == "cancelled" or "returned" or "delivered" %}
+                                                           
+                                                            {% endif %}
+                    
+                                                            {% if x.status == "order conformed" or "shipped" %} 
                                                             <td><a href="{% url 'order_cancel' x.id %}"  class="btn">tap to cancel</a></td> 
                                                             {% endif %}
-                                                            
+                                                             -->
                                                         </tr>
                                                         
                                                         {% endfor  %}
@@ -114,32 +147,48 @@
                                     <!-- Single Tab Content Start -->
                                     <div class="tab-pane fade" id="download" role="tabpanel">
                                         <div class="myaccount-content">
-                                            <h3>Downloads</h3>
+                                            <h3>Order Data</h3>
 
                                             <div class="myaccount-table table-responsive text-center">
-                                                <table class="table table-bordered">
-                                                    <thead class="thead-light">
+                                                <table  class="table table-bordered table-hover" data-name="product-table">
+                                                    <thead class="thead-light ">
                                                         <tr>
                                                             <th>Product</th>
-                                                            <th>Date</th>
-                                                            <th>Expire</th>
-                                                            <th>Download</th>
+                                                            <th>Product image</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th>Total</th>
+                                                            <th>date</th>
+                                                            <th>status</th>
+
+                                                            
                                                         </tr>
                                                     </thead>
 
                                                     <tbody>
+                                                        {% for x in order_products %}
+                                                    
                                                         <tr>
-                                                            <td>Mostarizing Oil</td>
-                                                            <td>Aug 22, 2018</td>
-                                                            <td>Yes</td>
-                                                            <td><a href="#" class="btn">Download File</a></td>
+                                                            <td>{{x.product.name}}</td>
+                                                            <td>
+                                                            <img style="height:100%; object-fit:contain" class=" img-fluid img-thumbnail"
+                                                            src="{{x.product.img}}" alt="image of product"></td>
+                        
+                                                            <td>{{x.quantity}}</td>
+                                                            <td>{{x.product_price}}</td>
+                                                            <td>{{x.product_price|mul:x.quantity|abs}}</td>
+                                                            <td>{{x.order.date}}</td>
+                                                            <td>{{x.order.status}}</td>
+
+                                                            <!-- {% if x.order.status ==  "delivered" %} 
+
+                                                            <td><a href="{% url 'product_return' x.id %}" class="btn">Return</a></td>
+                                                            {% endif %} -->
+                                                            
+
                                                         </tr>
-                                                        <tr>
-                                                            <td>Katopeno Altuni</td>
-                                                            <td>Sep 12, 2018</td>
-                                                            <td>Never</td>
-                                                            <td><a href="#" class="btn">Download File</a></td>
-                                                        </tr>
+                                                        {% endfor %}
+                                                        
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -148,86 +197,182 @@
                                     <!-- Single Tab Content End -->
 
                                     <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="payment-method" role="tabpanel">
+                                    <!-- <div class="tab-pane fade" id="payment-method" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3>Payment Method</h3>
 
                                             <p class="saved-message">You Can't Saved Your Payment Method yet.</p>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!-- Single Tab Content End -->
 
                                     <!-- Single Tab Content Start -->
+                                    <div class="tab-pane fade" id="address" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Billing Address</h3>
+                                            <a href="{% url 'add_new_address' %}" class="btn d-inline-block edit-address-btn"><i class="fa fa-edit"></i>Add Address</a>
+                                            <div class="row">
+                                            
+                                            {% for x in address %}
+                                            <div class="col-md-6">
+                                            <address >
+                                                <p><strong>{{x.name}}</strong></p>
+                                                <p>{{x.email}} <br>
+                                                    {{x.address_details}}</p>
+                                                    <p>Mobile: {{x.phone}}</p>
+                                                    <p>{{x.town}},{{x.state}},</p>
+                                            </address>
+                                            <a href="{% url 'edit_address' x.id %}" class="btn d-inline-block edit-address-btn"><i class="fa fa-edit"></i>Edit Address</a>
+                                            <a href="{% url 'delete_address' x.id %}" onclick="return confirm('Do you want to remove {{x.name}}')"><i class="fa fa-trash-o"></i></a></td>
+                                            </div>
+                                            {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+
+
+
                                     <div class="tab-pane fade" id="address-edit" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3>Billing Address</h3>
-
-                                            <address>
-                                                <p><strong>Alex Tuntuni</strong></p>
-                                                <p>1355 Market St, Suite 900 <br>
-                                                San Francisco, CA 94103</p>
-                                                    <p>Mobile: (123) 456-7890</p>
+                                            <a href="{% url 'add_new_address' %}" class="btn d-inline-block edit-address-btn"><i class="fa fa-edit"></i>Add Address</a>
+                                            <div class="row">
+                                            
+                                            {% for x in address %}
+                                            <div class="col-md-6">
+                                            <address >
+                                                <p><strong>{{x.name}}</strong></p>
+                                                <p>{{x.email}} <br>
+                                                    {{x.address_details}}</p>
+                                                    <p>Mobile: {{x.phone}}</p>
+                                                    <p>{{x.town}},{{x.state}},</p>
                                             </address>
+                                            <a href="{% url 'edit_address' x.id %}" class="btn d-inline-block edit-address-btn"><i class="fa fa-edit"></i>Edit Address</a>
+                                            <a href="{% url 'delete_address' x.id %}" onclick="return confirm('Do you want to remove {{x.name}}')"><i class="fa fa-trash-o"></i></a></td>
+                                            </div>
+                                            {% endfor %}
+                                            </div>
+                                            </div>
+                                       
+                                    </div>
 
-                                            <a href="#" class="btn d-inline-block edit-address-btn"><i class="fa fa-edit"></i>Edit Address</a>
+                                    <div class="tab-pane fade" id="wallet" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Wallet </h3>
+                                                <p>user  <strong>{{wallets.user}}</strong></p>
+                                                <p> wood pay balance<strong style="color:green;">₹{{wallets.balance}}/- </strong><br>
+        
                                         </div>
                                     </div>
                                     <!-- Single Tab Content End -->
 
                                     <!-- Single Tab Content Start -->
-                                    <div class="tab-pane fade" id="account-info" role="tabpanel">
+                                    <div class="tab-pane fade" id="user-data" role="tabpanel">
                                         <div class="myaccount-content">
                                             <h3>Account Details</h3>
 
                                             <div class="account-details-form">
-                                                <form action="#">
+                                                <form action="{% url 'update_user' user_data.id %}" method="POST">
+                                                    {% csrf_token %}
                                                     <div class="row">
+                                                       
                                                         <div class="col-lg-6 col-12 mb-30">
-                                                            <input id="first-name" placeholder="First Name" type="text">
+                                                            <input  placeholder="{{user_data.first_name}}" type="text" value="{{user_data.first_name}}" name="first_name" >
                                                         </div>
 
                                                         <div class="col-lg-6 col-12 mb-30">
-                                                            <input id="last-name" placeholder="Last Name" type="text">
+                                                            <input placeholder="{{user_data.last_name}}" type="text" value="{{user_data.last_name}}" name="last_name" >
                                                         </div>
 
                                                         <div class="col-12 mb-30">
-                                                            <input id="display-name" placeholder="Display Name" type="text">
+                                                            <input  placeholder="{{user_data.username}}"  type="text" value="{{user_data.username}}" name="username">
+                                                        </div>
+                                                        <div class="col-12 mb-30">
+                                                            <input  placeholder="{{user_data.phone_number}}"  type="text" value="{{user_data.phone_number}}" name="phone_number">
+                                                        </div>
+                                                        
+                                                        <div class="col-12 mb-30">
+                                                            <input  placeholder="{{user_data.email}}"  type="email" value="{{user_data.email}}" name="email">
                                                         </div>
 
-                                                        <div class="col-12 mb-30">
-                                                            <input id="email" placeholder="Email Address" type="email">
-                                                        </div>
-
-                                                        <div class="col-12 mb-30">
+                                                        <!-- <div class="col-12 mb-30">
                                                             <h4>Password change</h4>
                                                         </div>
 
                                                         <div class="col-12 mb-30">
-                                                            <input id="current-pwd" placeholder="Current Password" type="password">
+                                                            <input  placeholder="Current Password" type="password" name="password" >
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-12 mb-30"> 
+                                                            <input  placeholder="New Password" type="password" name ="password1"> 
                                                         </div>
 
                                                         <div class="col-lg-6 col-12 mb-30">
-                                                            <input id="new-pwd" placeholder="New Password" type="password">
-                                                        </div>
-
-                                                        <div class="col-lg-6 col-12 mb-30">
-                                                            <input id="confirm-pwd" placeholder="Confirm Password" type="password">
-                                                        </div>
+                                                            <input  placeholder="Confirm Password" type="password" name="password2">
+                                                        </div> -->
 
                                                         <div class="col-12">
-                                                            <button class="save-change-btn">Save Changes</button>
+                                             
+                                                             <button type="submit" class="save-change-btn"  onclick="return confirm('Do you want to update')" > Save Changes   </button>
                                                         </div>
 
                                                     </div>
                                                 </form>
                                             </div>
+                                            {% if messages %}
+                                            {% for message in messages %}
+                                                {{message}}
+                                            {% endfor %}
+                                        {% endif %}
                                         </div>
-                                    </div>
+                                    </div> 
+                                    <div class="tab-pane fade" id="password" role="tabpanel">
+                                        <div class="myaccount-content">
+                                            <h3>Account Details</h3>
+
+                                            <div class="account-details-form">
+                                                <form action="{% url 'update_password' user_data.id %}" method="POST">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                         <div class="col-12 mb-30">
+                                                            <h4>Password change</h4>
+                                                        </div>
+
+                                                        <div class="col-12 mb-30">
+                                                            <input  placeholder="Current Password" type="password" name="old_password" >
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-12 mb-30"> 
+                                                            <input  placeholder="New Password" type="password" name ="new_password1"> 
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-12 mb-30">
+                                                            <input  placeholder="Confirm Password" type="password" name="new_password2">
+                                                        </div>
+
+                                                        <div class="col-12">
+                                             
+                                                            <button type="submit" class="save-change-btn"  onclick="return confirm('Do you want to change password')" > Save Changes   </button>
+                                                       </div>
+
+                                                   </div>
+                                               </form>
+                                           </div>
+                                           {% if messages %}
+                                           {% for message in messages %}
+                                               {{message}}
+                                           {% endfor %}
+                                       {% endif %}
+                                       </div>
+                                   </div> 
+
                                     <!-- Single Tab Content End -->
-                                </div>
-                            </div>
+                                <!-- </div>
+                            </div> -->
                             <!-- My Account Tab Content End -->
                         </div>
+
 
                     </div>
 
@@ -235,4 +380,5 @@
             </div>
         </div>
         <!--My Account section end-->
+        
         {% endblock %}    
